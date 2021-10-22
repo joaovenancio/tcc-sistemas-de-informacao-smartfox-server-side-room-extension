@@ -27,11 +27,13 @@ public class ReceiveStory extends BaseClientRequestHandler {
 
         UserVariable story = new SFSUserVariable( "H"+ (user.getLastJoinedRoom().getVariable("turn").getStringValue().substring(2)),
                 isfsObject.getUtfString("story"));
+        UserVariable storyEvaluation = new SFSUserVariable( "E"+ (user.getLastJoinedRoom().getVariable("turn").getStringValue().substring(2)),
+                0);
 
         trace(story.getName());
         trace(story.getStringValue());
 
-        getApi().setUserVariables(user, Arrays.asList(story) );
+        getApi().setUserVariables(user, Arrays.asList(story, storyEvaluation) );
 
     }
 

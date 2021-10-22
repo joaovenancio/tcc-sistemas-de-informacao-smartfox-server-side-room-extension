@@ -8,7 +8,8 @@ public enum ServerSetupVariables {
     TIMER_COUNT_PROPOSING_PHASE("20"),
     TIMER_COUNT_EVALUATING_PHASE("20"),
     WAITING_FOR_SOTRY_TIMETOUT("15"),
-    WAITING_FOR_RECIEVE_TIMETOUT("15");
+    WAITING_FOR_RECIEVE_TIMETOUT("15"),
+    POINTS_TO_GIVE("1");
 
     //Atributes:
     private String value;
@@ -19,7 +20,7 @@ public enum ServerSetupVariables {
     }
 
     //Methods:
-    public String getValue() {
+    private String getValue() {
         return value;
     }
 

@@ -18,6 +18,7 @@ public class MikeHelpMeRoomExtension extends SFSExtension {
         this.addRequestHandler("start", StartHandler.class);
         this.addRequestHandler("receiveStory", ReceiveStory.class);
         this.addRequestHandler("haveAllStories", HaveAllStories.class);
+        this.addRequestHandler("takePoints", GivePoints.class);
     }
 
     @Override
@@ -44,4 +45,5 @@ public class MikeHelpMeRoomExtension extends SFSExtension {
     public void setUsersThatSentStory(ArrayList<User> usersThatSentStory) {
         this.usersThatSentStory = usersThatSentStory;
     }
+
 }
