@@ -30,7 +30,10 @@ public class StartHandler extends BaseClientRequestHandler {
                 turn.setGlobal(true);
                 turn.setPrivate(true);
 
-                getApi().setRoomVariables(null, user.getLastJoinedRoom(), Arrays.asList(turn));
+                RoomVariable maxPoints = new SFSRoomVariable("maxPoints", 0);
+                maxPoints.setGlobal(true);
+
+                getApi().setRoomVariables(null, user.getLastJoinedRoom(), Arrays.asList(turn, maxPoints));
 
                 UserVariable receivedAllStories = new SFSUserVariable("receivedAllStories", false );
                 UserVariable evaluatedAllStories = new SFSUserVariable("evaluatedAllStories", false );

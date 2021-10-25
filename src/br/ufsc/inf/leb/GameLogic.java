@@ -74,16 +74,29 @@ public class GameLogic {
 
                 case "EP":
                     if (timerCount == ServerSetupVariables.TIMER_COUNT_EVALUATING_PHASE.getIntValue()) {
+                        String userStory = turn.substring(2);
+
+                        //checkIfAllUsersEvaluatedAllStories();
+
+                        updateTurnRoomVariable("SP" + userStory);
+
+                        timerCount = 0;
+
+                    }
+                    break;
+
+                case "SP":
+                    if (timerCount == ServerSetupVariables.TIMER_COUNT_SCORE_PHASE.getIntValue()) {
                         int userStory = Integer.parseInt(turn.substring(2));
 
                         updateTurnRoomVariable("RP" + String.valueOf(userStory + 1));
+                        updateMaxPointsVariable();
 
                         timerCount = 0;
 
                         //Clear control variable mikeHelpMeRoomExtension:
-                        mikeHelpMeRoomExtension.setUsersThatSentStory(new ArrayList<>());
+                        mikeHelpMeRoomExtension.setUsersThatSentStory(new ArrayList<>()); //Probably not needed!!!!
                         resetUserVariables();
-
                     }
                     break;
             }
@@ -99,6 +112,17 @@ public class GameLogic {
             timerRunnable.cancel(true);
             //Salvar Historias
         }
+    }
+
+    private void updateMaxPointsVariable() {
+        int oldMaxPoints = room.getVariable("maxPoints").getIntValue();
+
+        int playersPerVote = room.getPlayersList().size() - 1;
+
+        RoomVariable maxPoints = new SFSRoomVariable("maxPoints", oldMaxPoints + (playersPerVote * playersPerVote));
+        maxPoints.setGlobal(true);
+
+        mikeHelpMeRoomExtension.getApi().setRoomVariables(null, room, Arrays.asList(maxPoints));
     }
 
     private void resetUserVariables() {
