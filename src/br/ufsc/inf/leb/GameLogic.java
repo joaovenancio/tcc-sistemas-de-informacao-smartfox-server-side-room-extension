@@ -117,7 +117,8 @@ public class GameLogic {
     private void updateMaxPointsVariable() {
         int oldMaxPoints = room.getVariable("maxPoints").getIntValue();
 
-        int playersPerVote = room.getPlayersList().size() - 1;
+
+        int playersPerVote = (room.getPlayersList().size() - 2) * (room.getPlayersList().size() - 1);
 
         RoomVariable maxPoints = new SFSRoomVariable("maxPoints", oldMaxPoints + (playersPerVote * playersPerVote));
         maxPoints.setGlobal(true);

@@ -62,21 +62,18 @@ public class GivePoints extends BaseClientRequestHandler {
     }
 
     private void updtateAndPersistEvaluation(User user, ISFSObject isfsObject) {
-        trace("cheguei");
-        trace("Jogador: " + isfsObject.getInt("playerVoted"));
-        trace("Turno :" + turn.substring(2));
-        trace(user.getLastJoinedRoom().getUserById(isfsObject.getInt("playerVoted")).getName());
-        trace(user.getLastJoinedRoom().getUserById(isfsObject.getInt("playerVoted")).getVariable(("E" + turn.substring(2))));
-        trace(user.getLastJoinedRoom().getUserById(isfsObject.getInt("playerVoted")).getVariable(("E" + turn.substring(2))).getIntValue());
+//        trace(user.getLastJoinedRoom().getUserById(isfsObject.getInt("playerVoted")).getName());
+//        trace(user.getLastJoinedRoom().getUserById(isfsObject.getInt("playerVoted")).getVariable(("E" + turn.substring(2))));
+//        trace(user.getLastJoinedRoom().getUserById(isfsObject.getInt("playerVoted")).getVariable(("E" + turn.substring(2))).getIntValue());
 
-        int totalScore = user.getVariable("score").getIntValue();
+        int totalScore = user.getLastJoinedRoom().getUserById(isfsObject.getInt("playerVoted")).getVariable("score").getIntValue();
 
         UserVariable userScore = new SFSUserVariable("score", totalScore + ServerSetupVariables.POINTS_TO_GIVE.getIntValue());
         UserVariable storyEvaluation = new SFSUserVariable( "E"+ (user.getLastJoinedRoom().getVariable("turn").getStringValue().substring(2)),
                     user.getLastJoinedRoom().getUserById(isfsObject.getInt("playerVoted")).getVariable(("E" + turn.substring(2))).getIntValue()
                             + ServerSetupVariables.POINTS_TO_GIVE.getIntValue());
 
-        trace("User " + user.getLastJoinedRoom().getUserById(isfsObject.getInt("playerVoted")).getName() + " voted on " + storyEvaluation.getName() + ". User Story score: " + storyEvaluation.getIntValue() );
+        trace("User " + user.getName() + "voted on User " + user.getLastJoinedRoom().getUserById(isfsObject.getInt("playerVoted")).getName() + ". User Story score: " + storyEvaluation.getIntValue() );
 
         //trace(storyEvaluation.getIntValue().toString());
         getApi().setUserVariables(user.getLastJoinedRoom().getUserById(isfsObject.getInt("playerVoted")), Arrays.asList(storyEvaluation, userScore) );
