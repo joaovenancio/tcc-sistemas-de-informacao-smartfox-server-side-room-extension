@@ -2,13 +2,15 @@ package br.ufsc.inf.leb;
 
 import java.util.ArrayList;
 
-public class ListOfVoteList {
+public class SharedData {
 
-    private static ListOfVoteList instance;
+    private static SharedData instance;
     private ArrayList<VoteList> voteLists;
+    private String turn;
 
-    private ListOfVoteList() {
+    private SharedData() {
         this.voteLists = new ArrayList<VoteList>();
+        this.turn = "EP1";
     }
 
     public synchronized void clear () {
@@ -19,9 +21,9 @@ public class ListOfVoteList {
         return this.voteLists.size();
     }
 
-    public static synchronized ListOfVoteList getInstance() {
+    public static synchronized SharedData getInstance() {
         if (instance == null) {
-            instance = new ListOfVoteList();
+            instance = new SharedData();
         }
 
         return instance;
@@ -29,5 +31,13 @@ public class ListOfVoteList {
 
     public ArrayList<VoteList> getVoteLists() {
         return voteLists;
+    }
+
+    public String getTurn() {
+        return turn;
+    }
+
+    public void setTurn(String turn) {
+        this.turn = turn;
     }
 }

@@ -89,14 +89,27 @@ public class GameLogic {
                     if (timerCount == ServerSetupVariables.TIMER_COUNT_SCORE_PHASE.getIntValue()) {
                         int userStory = Integer.parseInt(turn.substring(2));
 
-                        updateTurnRoomVariable("RP" + String.valueOf(userStory + 1));
-                        updateMaxPointsVariable();
+                        if (!(userStory >= ServerSetupVariables.NUMBER_OF_USER_STORIES.getIntValue())) {
+                            updateTurnRoomVariable("RP" + String.valueOf(userStory + 1));
+                            updateMaxPointsVariable();
 
-                        timerCount = 0;
+                            timerCount = 0;
 
-                        //Clear control variable mikeHelpMeRoomExtension:
-                        mikeHelpMeRoomExtension.setUsersThatSentStory(new ArrayList<>()); //Probably not needed!!!!
-                        resetUserVariables();
+                            //Clear control variable mikeHelpMeRoomExtension:
+                            mikeHelpMeRoomExtension.setUsersThatSentStory(new ArrayList<>()); //Probably not needed!!!!
+                            resetUserVariables();
+                        } else {
+                            RoomVariable newTurn = new SFSRoomVariable("turn", "ENDEP");
+                            newTurn.setGlobal(true);
+                            newTurn.setPrivate(true);
+                            updateMaxPointsVariable();
+
+                            traceRoomTurnUpdate(room, (String) (newTurn.getValue()));
+                            mikeHelpMeRoomExtension.getApi().setRoomVariables(null, room, Arrays.asList(newTurn));
+                            timerCount = 0;
+                            timerRunnable.cancel(true);
+                            //Salvar Historias
+                        }
                     }
                     break;
             }
@@ -117,10 +130,9 @@ public class GameLogic {
     private void updateMaxPointsVariable() {
         int oldMaxPoints = room.getVariable("maxPoints").getIntValue();
 
+        int maxVotesOnTurn = (room.getPlayersList().size() - 2) * (room.getPlayersList().size() - 1);
 
-        int playersPerVote = (room.getPlayersList().size() - 2) * (room.getPlayersList().size() - 1);
-
-        RoomVariable maxPoints = new SFSRoomVariable("maxPoints", oldMaxPoints + (playersPerVote * playersPerVote));
+        RoomVariable maxPoints = new SFSRoomVariable("maxPoints", (oldMaxPoints + maxVotesOnTurn));
         maxPoints.setGlobal(true);
 
         mikeHelpMeRoomExtension.getApi().setRoomVariables(null, room, Arrays.asList(maxPoints));

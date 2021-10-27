@@ -10,6 +10,7 @@ public enum ServerSetupVariables {
     TIMER_COUNT_SCORE_PHASE("10"),
     WAITING_FOR_SOTRY_TIMETOUT("15"),
     WAITING_FOR_RECIEVE_TIMETOUT("15"),
+    NUMBER_OF_USER_STORIES("2"),
     POINTS_TO_GIVE("1");
 
     //Atributes:
