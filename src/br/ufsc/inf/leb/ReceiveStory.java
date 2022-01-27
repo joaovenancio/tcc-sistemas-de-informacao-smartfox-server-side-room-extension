@@ -2,6 +2,7 @@ package br.ufsc.inf.leb;
 
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
+import com.smartfoxserver.v2.entities.data.SFSArray;
 import com.smartfoxserver.v2.entities.variables.SFSUserVariable;
 import com.smartfoxserver.v2.entities.variables.UserVariable;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
@@ -16,12 +17,20 @@ public class ReceiveStory extends BaseClientRequestHandler {
 
     @Override
     public void handleClientRequest(User user, ISFSObject isfsObject) {
-        trace("User " + user.getName() + "sent a user story on game " + user.getLastJoinedRoom().getName() + "#" + user.getLastJoinedRoom().getId());
+        trace("User " + user.getName() + " sent a user story on game " + user.getLastJoinedRoom().getName() + "#" + user.getLastJoinedRoom().getId());
         MikeHelpMeRoomExtension roomExtension = (MikeHelpMeRoomExtension) getParentExtension();
 
-        for (User iterationUser : roomExtension.getUsersThatSentStory()) {
-            if (iterationUser.getId() == user.getId()) {
-                return;
+        SFSArray playerIDsfsa = (SFSArray) user.getLastJoinedRoom().getVariable("usersThatSentStory").getSFSArrayValue();
+
+        if (playerIDsfsa.size() == 0) {
+
+            playerIDsfsa.addInt(user.getId());
+
+        } else {
+            for (int playerIndex = 0; playerIndex < playerIDsfsa.size(); playerIndex++) {
+                if (playerIDsfsa.getInt(playerIndex) == user.getId()) {
+                    return;
+                }
             }
         }
 
