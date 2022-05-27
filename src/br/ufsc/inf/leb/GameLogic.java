@@ -19,6 +19,7 @@ public class GameLogic {
     private MikeHelpMeRoomExtension mikeHelpMeRoomExtension;
     private Room room;
     private ScheduledFuture timerRunnable;
+    private ScheduledFuture logicRunnable;
     private ScheduledFuture checkUserStoryRunnable;
     private ScheduledFuture checkUsersReceivedAllStoriesRunnable;
     private int timerCount = 0;
@@ -35,20 +36,25 @@ public class GameLogic {
     public void start() {
         mikeHelpMeRoomExtension.trace("Game on " + this.room.getName() + "#" + this.room.getId() + " has started.");
 
-        timerRunnable = mikeHelpMeRoomExtension.getApi().getSystemScheduler().scheduleAtFixedRate(() -> {
-            timerCount++;
-            checkGameState();
-        }, 0, 1, TimeUnit.SECONDS);
+            timerRunnable = mikeHelpMeRoomExtension.getApi().getSystemScheduler().scheduleAtFixedRate(() -> {
+                try {
+                    timerCount++;
+                    checkGameState();
+                } catch (Exception e) {
+                    mikeHelpMeRoomExtension.trace(e.getMessage());
+                }
+            }, 0, 1, TimeUnit.SECONDS);
+
     }
 
-    private void checkGameState() {
+    public void checkGameState() {
         if (room.getPlayersList().size() >= ServerSetupVariables.MIN_PLAYERS_TO_START.getIntValue()) {
             String turn = (String) (room.getVariable("turn").getValue());
             mikeHelpMeRoomExtension.trace(timerCount);
 
             switch (turn.substring(0, 2)) {
                 case "RP":
-                    if (timerCount == ServerSetupVariables.TIMER_COUNT_READING_PHASE.getIntValue()) {
+                    if (timerCount >= ServerSetupVariables.TIMER_COUNT_READING_PHASE.getIntValue()) {
                         String userStory = turn.substring(2);
 
                         updateTurnRoomVariable("PP" + userStory);
@@ -58,7 +64,7 @@ public class GameLogic {
                     break;
 
                 case "PP":
-                    if (timerCount == ServerSetupVariables.TIMER_COUNT_PROPOSING_PHASE.getIntValue()) {
+                    if (timerCount >= ServerSetupVariables.TIMER_COUNT_PROPOSING_PHASE.getIntValue()) {
                         String userStory = turn.substring(2);
 
                         checkIfAllUsersSentTheirStories(userStory);
@@ -73,7 +79,7 @@ public class GameLogic {
                     break;
 
                 case "EP":
-                    if (timerCount == ServerSetupVariables.TIMER_COUNT_EVALUATING_PHASE.getIntValue()) {
+                    if (timerCount >= ServerSetupVariables.TIMER_COUNT_EVALUATING_PHASE.getIntValue()) {
                         String userStory = turn.substring(2);
 
                         //checkIfAllUsersEvaluatedAllStories();
@@ -86,7 +92,7 @@ public class GameLogic {
                     break;
 
                 case "SP":
-                    if (timerCount == ServerSetupVariables.TIMER_COUNT_SCORE_PHASE.getIntValue()) {
+                    if (timerCount >= ServerSetupVariables.TIMER_COUNT_SCORE_PHASE.getIntValue()) {
                         int userStory = Integer.parseInt(turn.substring(2));
 
                         if (!(userStory >= ServerSetupVariables.NUMBER_OF_USER_STORIES.getIntValue())) {

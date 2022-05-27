@@ -23,14 +23,16 @@ public class MikeHelpMeRoomExtension extends SFSExtension {
 
     @Override
     public void destroy() {
-        gameLogic.getTimerRunnable().cancel(true);
-        if (gameLogic.getCheckUserStoryRunnable() != null &&
-                (!gameLogic.getCheckUserStoryRunnable().isDone() || !gameLogic.getCheckUserStoryRunnable().isCancelled())) {
-            gameLogic.getCheckUserStoryRunnable().cancel(true);
-        }
-        if (gameLogic.getCheckUsersReceivedAllStoriesRunnable() != null &&
-                (!gameLogic.getCheckUsersReceivedAllStoriesRunnable().isDone() || !gameLogic.getCheckUsersReceivedAllStoriesRunnable().isCancelled())) {
-            gameLogic.getCheckUsersReceivedAllStoriesRunnable().cancel(true);
+        if (gameLogic != null || gameLogic.getTimerRunnable() != null) {
+            gameLogic.getTimerRunnable().cancel(true);
+            if (gameLogic.getCheckUserStoryRunnable() != null &&
+                    (!gameLogic.getCheckUserStoryRunnable().isDone() || !gameLogic.getCheckUserStoryRunnable().isCancelled())) {
+                gameLogic.getCheckUserStoryRunnable().cancel(true);
+            }
+            if (gameLogic.getCheckUsersReceivedAllStoriesRunnable() != null &&
+                    (!gameLogic.getCheckUsersReceivedAllStoriesRunnable().isDone() || !gameLogic.getCheckUsersReceivedAllStoriesRunnable().isCancelled())) {
+                gameLogic.getCheckUsersReceivedAllStoriesRunnable().cancel(true);
+            }
         }
     }
 
